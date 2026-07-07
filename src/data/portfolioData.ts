@@ -180,7 +180,6 @@ export const portfolioData = {
     { "src": "/posters/rising_star.png", "alt": "Rising Star" },
     { "src": "/posters/whatsapp_1.jpeg", "alt": "Event Poster 1" },
     { "src": "/posters/whatsapp_2.jpeg", "alt": "Event Poster 2" },
-    { "src": "/posters/whatsapp_3.jpeg", "alt": "Event Poster 3" },
     { "src": "/posters/whatsapp_4.jpeg", "alt": "Event Poster 4" },
     { "src": "/posters/whatsapp_5.jpeg", "alt": "Event Poster 5" }
   ]
