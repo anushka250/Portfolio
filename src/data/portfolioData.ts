@@ -29,9 +29,9 @@ export const portfolioData = {
       "link": "/images/vidai_samaroh.png"
     },
     {
-      "title": "Social Media Creatives",
-      "icon": "instagram-logo",
-      "description": "Crafting highly engaging, scroll-stopping social media posts and templates tailored for brand consistency."
+      "title": "Edits",
+      "icon": "video-camera",
+      "description": "Professional video editing, color grading, and dynamic motion graphics that bring stories to life."
     }
   ],
   "skills": {

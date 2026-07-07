@@ -12,6 +12,7 @@ export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [showInstaModal, setShowInstaModal] = useState<boolean>(false);
 
   // Handle browser back button
   useEffect(() => {
@@ -22,7 +23,13 @@ export default function Home() {
       } else {
         setShowGallery(false);
       }
-      
+
+      if (state?.insta) {
+        setShowInstaModal(true);
+      } else {
+        setShowInstaModal(false);
+      }
+
       if (!state?.lightbox) {
         setLightboxImg(null);
       }
@@ -34,6 +41,19 @@ export default function Home() {
   const openGallery = () => {
     window.history.pushState({ gallery: true }, '');
     setShowGallery(true);
+  };
+
+  const openInstaModal = () => {
+    window.history.pushState({ insta: true }, '');
+    setShowInstaModal(true);
+  };
+
+  const closeInstaModal = () => {
+    if (window.history.state?.insta) {
+      window.history.back();
+    } else {
+      setShowInstaModal(false);
+    }
   };
 
   const openLightbox = (src: string) => {
@@ -56,11 +76,11 @@ export default function Home() {
       setShowGallery(false);
     }
   };
-  
+
   useEffect(() => {
     // Simple GSAP animation
     const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-greeting, .hero-title, .hero-desc', 
+      gsap.fromTo('.hero-greeting, .hero-title, .hero-desc',
         { y: 50, opacity: 0 },
         {
           y: 0,
@@ -75,7 +95,7 @@ export default function Home() {
           }
         }
       );
-      
+
       gsap.fromTo('.about-manifesto',
         { y: 50, opacity: 0 },
         {
@@ -90,7 +110,7 @@ export default function Home() {
           }
         }
       );
-      gsap.fromTo('.service-card', 
+      gsap.fromTo('.service-card',
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -104,7 +124,7 @@ export default function Home() {
           }
         }
       );
-      gsap.fromTo('.skill-card', 
+      gsap.fromTo('.skill-card',
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -163,7 +183,7 @@ export default function Home() {
                 <a href="#contact" className="btn btn-secondary">Let's Talk</a>
               </div>
             </div>
-            
+
             <div className="hero-image-wrapper">
               <img src="/images/profile.png" alt="Anushka Mall Portrait" className="hero-portrait" loading="lazy" />
             </div>
@@ -174,12 +194,12 @@ export default function Home() {
         <section id="about" className="about-premium">
           <div className="container about-container">
             <h2 className="about-manifesto">
-              I specialize in transforming complex ideas into visually engaging stories through 
-              <span className="highlight"> Poster Design</span>, <span className="highlight">Social Media Creatives</span>, 
-              <span className="highlight"> Banners</span>, <span className="highlight">Standees</span>, and <span className="highlight">Backdrops</span>. 
-              Leveraging tools like <span className="highlight">Photoshop</span>, <span className="highlight">Figma</span>, 
-              and <span className="highlight">Canva</span>, I continuously explore new design trends to craft print and digital experiences. 
-              My approach blends meticulous attention to detail with bold creativity—delivering designs that are not only aesthetically 
+              I specialize in transforming complex ideas into visually engaging stories through
+              <span className="highlight"> Poster Design</span>, <span className="highlight">Social Media Creatives</span>,
+              <span className="highlight"> Banners</span>, <span className="highlight">Standees</span>, and <span className="highlight">Backdrops</span>.
+              Leveraging tools like <span className="highlight">Photoshop</span>, <span className="highlight">Figma</span>,
+              and <span className="highlight">Canva</span>, I continuously explore new design trends to craft print and digital experiences.
+              My approach blends meticulous attention to detail with bold creativity—delivering designs that are not only aesthetically
               striking but profoundly purpose-driven.
             </h2>
           </div>
@@ -191,13 +211,15 @@ export default function Home() {
             <h2 className="section-title">What I Made</h2>
             <div className="services-grid">
               {portfolioData.services.map((service: any, index) => (
-                <div 
-                  className="service-card" 
+                <div
+                  className="service-card"
                   key={index}
-                  style={{ cursor: (service.link || service.title === "Poster Design") ? 'pointer' : 'default' }}
+                  style={{ cursor: (service.link || service.title === "Poster Design" || service.title === "Edits") ? 'pointer' : 'default' }}
                   onClick={() => {
                     if (service.title === "Poster Design") {
                       openGallery();
+                    } else if (service.title === "Edits") {
+                      openInstaModal();
                     } else if (service.link) {
                       openLightbox(service.link);
                     }
@@ -217,11 +239,11 @@ export default function Home() {
           <div className="gallery-overlay">
             <div className="gallery-modal-content">
               <button className="gallery-close" onClick={closeGallery}>&times;</button>
-              <h2 className="section-title text-center" style={{marginTop: '2rem'}}>Poster Gallery</h2>
+              <h2 className="section-title text-center" style={{ marginTop: '2rem' }}>Poster Gallery</h2>
               <div className="posters-masonry">
                 {portfolioData.posters.map((poster: any, index) => (
-                  <div 
-                    className="poster-item" 
+                  <div
+                    className="poster-item"
                     key={index}
                     onClick={() => openLightbox(poster.src)}
                   >
@@ -240,14 +262,14 @@ export default function Home() {
         <section id="skills" className="skills section-padding">
           <div className="container">
             <h2 className="section-title">Software & Expertise</h2>
-            
+
             <div className="skills-category">
               <h3 className="skills-subtitle">Graphic Design</h3>
               <div className="skills-grid">
                 {portfolioSkills.graphicDesign.map((skill, index) => (
                   <div className="skill-card" key={index}>
                     <div className="skill-header">
-                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" unoptimized/>
+                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" unoptimized />
                       <h4 className="skill-title">{skill.name}</h4>
                     </div>
                     <p className="skill-desc">{skill.description}</p>
@@ -262,7 +284,7 @@ export default function Home() {
                 {portfolioSkills.videoEditing.map((skill, index) => (
                   <div className="skill-card" key={index}>
                     <div className="skill-header">
-                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" style={skill.name === 'DaVinci Resolve' ? {borderRadius: '8px'} : {}} unoptimized/>
+                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" style={skill.name === 'DaVinci Resolve' ? { borderRadius: '8px' } : {}} unoptimized />
                       <h4 className="skill-title">{skill.name}</h4>
                     </div>
                     <p className="skill-desc">{skill.description}</p>
@@ -282,7 +304,7 @@ export default function Home() {
               <div className="contact-form-container">
                 <h2 className="contact-title text-center">Let's Create Something Premium</h2>
                 <p className="text-center" style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Fill out the form below and I'll get back to you shortly.</p>
-                
+
                 <form className="premium-form">
                   <div className="form-row">
                     <div className="form-group">
@@ -294,7 +316,7 @@ export default function Home() {
                       <input type="text" placeholder="Last name" />
                     </div>
                   </div>
-                  
+
                   <div className="form-row">
                     <div className="form-group">
                       <label>Email <span className="required">*</span></label>
@@ -345,6 +367,28 @@ export default function Home() {
           </div>
         </footer>
       </main>
+
+      {/* Insta Pages Modal */}
+      {showInstaModal && (
+        <div className="gallery-overlay">
+          <div className="gallery-modal-content" style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <button className="gallery-close" onClick={closeInstaModal}>&times;</button>
+            <h2 className="section-title text-center" style={{ marginTop: '2rem', fontSize: '2.5rem' }}>My Instagram Pages</h2>
+            <div className="insta-cards-container">
+              <a href="https://www.instagram.com/anushka_mall_25?igsh=eW50MzgwMWg0Zmgx" target="_blank" rel="noopener noreferrer" className="insta-card">
+                <div className="insta-icon"><i className="ph ph-instagram-logo"></i></div>
+                <h3>@anushka_mall_25</h3>
+                <p>Artworks</p>
+              </a>
+              <a href="https://www.instagram.com/ams__diaries?igsh=MWIzbzJvZTIzYjFvNw==" target="_blank" rel="noopener noreferrer" className="insta-card">
+                <div className="insta-icon"><i className="ph ph-instagram-logo"></i></div>
+                <h3>@ams__diaries</h3>
+                <p>Edits</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Lightbox Modal */}
       {lightboxImg && (
