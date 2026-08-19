@@ -11,32 +11,32 @@ export async function POST(request: Request) {
 
     // Server-side validation
     if (!senderName) {
-      return NextResponse.json({ error: 'First name or name is required.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'First name or name is required.' }, { status: 400 });
     }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: 'A valid email address is required.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'A valid email address is required.' }, { status: 400 });
     }
 
     if (!message || message.trim().length === 0) {
-      return NextResponse.json({ error: 'Message cannot be empty.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Message cannot be empty.' }, { status: 400 });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || 'msanya08602@gmail.com';
+    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || 'msanya086@gmail.com';
 
     // Check if API key is present and not a placeholder
-    if (!apiKey || apiKey.includes('placeholder')) {
-      console.log('RESEND_API_KEY is not configured yet. Returning fallback dev response.');
+    if (!apiKey || apiKey.trim() === '' || apiKey.includes('placeholder')) {
+      console.warn('RESEND_API_KEY environment variable is not configured.');
       return NextResponse.json({
-        success: true,
-        message: 'Form validated successfully! (Note: Add your live RESEND_API_KEY in Vercel/.env.local to send live emails).'
-      });
+        success: false,
+        error: 'Email service is not configured yet. Please set RESEND_API_KEY in your environment variables.'
+      }, { status: 500 });
     }
 
     const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
-      from: 'Anushka Mall Portfolio <onboarding@resend.dev>',
+      from: 'Anushka Portfolio <onboarding@resend.dev>',
       to: recipientEmail,
       replyTo: email,
       subject: `[Portfolio Contact] ${emailSubject} from ${senderName}`,
@@ -60,13 +60,24 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error('Resend Email Error:', error);
-      return NextResponse.json({ error: error.message || 'Failed to send email via Resend.' }, { status: 500 });
+      console.error('Resend API Error details:', error);
+      return NextResponse.json({
+        success: false,
+        error: error.message || 'Failed to send email via Resend API.'
+      }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, data });
+    console.log('Email successfully sent via Resend API:', data);
+    return NextResponse.json({
+      success: true,
+      message: 'Thank you! Your message has been sent successfully.',
+      data
+    });
   } catch (err: any) {
-    console.error('Contact API Error:', err);
-    return NextResponse.json({ error: err.message || 'Internal server error.' }, { status: 500 });
+    console.error('Contact API Internal Error:', err);
+    return NextResponse.json({
+      success: false,
+      error: err.message || 'Internal server error while sending email.'
+    }, { status: 500 });
   }
 }

@@ -15,8 +15,7 @@
   
   /* Typography */
   --font-display: 'Playfair Display', 'DM Serif Display', Georgia, serif;
-  --font-heading: 'Playfair Display', 'DM Serif Display', Georgia, serif;
-  --font-hero-heading: 'Outfit', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
   
   /* Spacing */
@@ -134,7 +133,6 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.02em;
   color: var(--text-primary);
   line-height: 1.15;
-  text-transform: uppercase;
 }
 
 .gallery-modal-content h2 {
@@ -439,7 +437,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .designer-heading {
-  font-family: var(--font-hero-heading);
+  font-family: var(--font-heading);
   font-size: clamp(4rem, 11.2vw, 10.2rem);
   font-weight: 900;
   line-height: 0.88;

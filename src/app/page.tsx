@@ -383,7 +383,7 @@ export default function Home() {
         {/* Services Section */}
         <section id="services" className="services section-padding">
           <div className="container">
-            <h2 className="section-title text-center" style={{ marginBottom: '2.5rem' }}>WHAT I MADE</h2>
+            <h2 className="section-title text-center" style={{ marginBottom: '2.5rem' }}>What I Made</h2>
             <div className="services-grid">
               {portfolioData.services.map((service: any, index) => (
                 <div
