@@ -87,7 +87,7 @@ export default function Home() {
       } else {
         setStatusMessage({
           type: 'error',
-          text: 'Unable to send your message. Please try again.'
+          text: data.error || 'Unable to send your message. Please try again.'
         });
       }
     } catch (err: any) {

@@ -23,23 +23,31 @@ export async function POST(request: Request) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || 'msanya086@gmail.com';
+    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL;
 
-    // Server-side environment variable check
+    // Check required environment variables
     if (!apiKey || apiKey.trim() === '' || apiKey.includes('placeholder')) {
-      console.warn('[SERVER LOG] RESEND_API_KEY environment variable is missing or unconfigured.');
+      console.error('[Resend Error] RESEND_API_KEY environment variable is missing.');
       return NextResponse.json({
         success: false,
-        error: 'Unable to send your message. Please try again.'
+        error: 'Email service is not configured yet. (RESEND_API_KEY missing)'
+      }, { status: 500 });
+    }
+
+    if (!recipientEmail || recipientEmail.trim() === '') {
+      console.error('[Resend Error] CONTACT_RECIPIENT_EMAIL environment variable is missing.');
+      return NextResponse.json({
+        success: false,
+        error: 'Recipient email is not configured yet. (CONTACT_RECIPIENT_EMAIL missing)'
       }, { status: 500 });
     }
 
     const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
-      from: 'Anushka Portfolio <onboarding@resend.dev>',
-      to: recipientEmail,
+      from: 'Anushka Mall Portfolio <onboarding@resend.dev>',
+      to: recipientEmail.trim(),
       replyTo: email,
-      subject: `[Portfolio Contact] ${emailSubject} from ${senderName}`,
+      subject: `Portfolio Contact: ${emailSubject}`,
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 24px; background-color: #f9f9f9; color: #333; max-width: 600px; margin: 0 auto; border-radius: 12px; border: 1px solid #e0e0e0;">
           <h2 style="color: #0f1f2b; margin-top: 0; border-bottom: 2px solid #67c6c8; padding-bottom: 10px;">New Portfolio Contact Message</h2>
@@ -60,24 +68,24 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error('[SERVER LOG] Resend API Error details:', error);
+      console.error('[Resend API Error]:', error);
       return NextResponse.json({
         success: false,
-        error: 'Unable to send your message. Please try again.'
+        error: error.message || 'Failed to send email via Resend API.'
       }, { status: 500 });
     }
 
-    console.log('[SERVER LOG] Email successfully sent via Resend API:', data);
+    console.log('[Resend Success] Email sent:', data);
     return NextResponse.json({
       success: true,
       message: "Message sent successfully! I'll get back to you soon.",
       data
     });
   } catch (err: any) {
-    console.error('[SERVER LOG] Contact API Internal Error:', err);
+    console.error('[Contact API Internal Error]:', err);
     return NextResponse.json({
       success: false,
-      error: 'Unable to send your message. Please try again.'
+      error: err.message || 'Internal server error while sending email.'
     }, { status: 500 });
   }
 }
