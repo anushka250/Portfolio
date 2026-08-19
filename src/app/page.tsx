@@ -290,7 +290,7 @@ export default function Home() {
               {/* Script/Serif Accent Name */}
               <div className="hero-name-badge hero-greeting">
                 <span className="script-accent">Anushka Mall</span>
-                <span className="designer-role-pill">PORTFOLIO '26</span>
+                <span className="designer-role-pill">PORTFOLIO &apos;26</span>
               </div>
 
               {/* Oversized Graphic Designer Title with Bounding Box & Vector Handles */}
@@ -464,8 +464,8 @@ export default function Home() {
             <div className="contact-premium-wrapper centered">
               {/* Center Aligned Form */}
               <div className="contact-form-container">
-                <h3 className="contact-title text-center" style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>Let's Create Something Premium</h3>
-                <p className="text-center" style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Fill out the form below and I'll get back to you shortly.</p>
+                <h3 className="contact-title text-center" style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>Let&apos;s Create Something Premium</h3>
+                <p className="text-center" style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Fill out the form below and I&apos;ll get back to you shortly.</p>
 
                 <form className="premium-form" onSubmit={handleContactSubmit}>
                   {statusMessage && (
