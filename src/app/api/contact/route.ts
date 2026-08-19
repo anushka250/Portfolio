@@ -11,26 +11,26 @@ export async function POST(request: Request) {
 
     // Server-side validation
     if (!senderName) {
-      return NextResponse.json({ success: false, error: 'First name or name is required.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'First name is required.' }, { status: 400 });
     }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ success: false, error: 'A valid email address is required.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Please enter a valid email address.' }, { status: 400 });
     }
 
     if (!message || message.trim().length === 0) {
-      return NextResponse.json({ success: false, error: 'Message cannot be empty.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Please enter your message.' }, { status: 400 });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
     const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || 'msanya086@gmail.com';
 
-    // Check if API key is present and not a placeholder
+    // Server-side environment variable check
     if (!apiKey || apiKey.trim() === '' || apiKey.includes('placeholder')) {
-      console.warn('RESEND_API_KEY environment variable is not configured.');
+      console.warn('[SERVER LOG] RESEND_API_KEY environment variable is missing or unconfigured.');
       return NextResponse.json({
         success: false,
-        error: 'Email service is not configured yet. Please set RESEND_API_KEY in your environment variables.'
+        error: 'Unable to send your message. Please try again.'
       }, { status: 500 });
     }
 
@@ -60,24 +60,24 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error('Resend API Error details:', error);
+      console.error('[SERVER LOG] Resend API Error details:', error);
       return NextResponse.json({
         success: false,
-        error: error.message || 'Failed to send email via Resend API.'
+        error: 'Unable to send your message. Please try again.'
       }, { status: 500 });
     }
 
-    console.log('Email successfully sent via Resend API:', data);
+    console.log('[SERVER LOG] Email successfully sent via Resend API:', data);
     return NextResponse.json({
       success: true,
-      message: 'Thank you! Your message has been sent successfully.',
+      message: "Message sent successfully! I'll get back to you soon.",
       data
     });
   } catch (err: any) {
-    console.error('Contact API Internal Error:', err);
+    console.error('[SERVER LOG] Contact API Internal Error:', err);
     return NextResponse.json({
       success: false,
-      error: err.message || 'Internal server error while sending email.'
+      error: 'Unable to send your message. Please try again.'
     }, { status: 500 });
   }
 }

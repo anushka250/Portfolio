@@ -72,7 +72,7 @@ export default function Home() {
       if (response.ok && data.success) {
         setStatusMessage({
           type: 'success',
-          text: data.message || 'Thank you! Your message has been sent successfully.'
+          text: "Message sent successfully! I'll get back to you soon."
         });
         // Clear form fields on success
         setFormData({
@@ -87,13 +87,13 @@ export default function Home() {
       } else {
         setStatusMessage({
           type: 'error',
-          text: data.error || 'Failed to send message. Please try again.'
+          text: 'Unable to send your message. Please try again.'
         });
       }
     } catch (err: any) {
       setStatusMessage({
         type: 'error',
-        text: 'An unexpected error occurred. Please check your connection and try again.'
+        text: 'Unable to send your message. Please try again.'
       });
     } finally {
       setIsSubmitting(false);
@@ -470,7 +470,8 @@ export default function Home() {
                 <form className="premium-form" onSubmit={handleContactSubmit}>
                   {statusMessage && (
                     <div className={`form-alert ${statusMessage.type}`}>
-                      {statusMessage.text}
+                      <i className={statusMessage.type === 'success' ? 'ph ph-check-circle' : 'ph ph-warning-circle'}></i>
+                      <span>{statusMessage.text}</span>
                     </div>
                   )}
 
