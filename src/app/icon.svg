@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2b6cf0" />
+      <stop offset="100%" stop-color="#24c0e6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="90" height="70" x="5" y="15" rx="8" fill="url(#bg)" />
+  
+  <!-- White Line -->
+  <line x1="20" y1="65" x2="45" y2="65" stroke="#fcfcfc" stroke-width="8" stroke-linecap="round" />
+  
+  <!-- Paintbrush -->
+  <g transform="translate(45, 65) rotate(-45)">
+    <!-- Tip (white) -->
+    <path d="M 0,0 C -5,-10 -8,-15 -8,-25 L 8,-25 C 8,-15 5,-10 0,0 Z" fill="#fcfcfc" />
+    <!-- Ferrule (gray) -->
+    <rect x="-8" y="-35" width="16" height="10" fill="#a0a0a0" />
+    <!-- Handle (dark grey) -->
+    <rect x="-8" y="-75" width="16" height="40" rx="3" fill="#333333" />
+  </g>
+</svg>

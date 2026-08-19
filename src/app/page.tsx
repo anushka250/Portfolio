@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { portfolioData } from '../data/portfolioData';
 import { portfolioSkills } from '../data/skills';
+import { OriginKitWaterButton } from '../components/ui/OriginKitWaterButton';
+import Smooth3DSlideshow from '../components/ui/Smooth3DSlideshow';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -151,13 +153,30 @@ export default function Home() {
         <div className="global-blob blob-4"></div>
       </div>
 
-      <header className="header" style={{ justifyContent: 'center' }}>
-        <nav className="nav" id="nav-menu">
-          <a href="#hero" className="nav-link">Home</a>
-          <a href="#about" className="nav-link">About</a>
-          <a href="#services" className="nav-link">Work</a>
-          <a href="#skills" className="nav-link">Skills</a>
-          <a href="#contact" className="nav-link">Contact</a>
+      <header className="header">
+        <div className="header-logo" style={{ 
+          width: '65px', 
+          height: '65px', 
+          borderRadius: '50%', 
+          backgroundColor: 'white', 
+          overflow: 'hidden', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
+        }}>
+          <img src="/images/WA0038.jpeg" alt="Anushka Mall Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', transform: 'scale(2.5) translateY(12%)' }} />
+        </div>
+        <nav className="nav" id="nav-menu" style={{ background: 'transparent', border: 'none', padding: 0 }}>
+          <OriginKitWaterButton rounded={50} paddingX={32} paddingY={16}>
+            <div style={{ display: 'flex', gap: '2rem', padding: '1rem 2rem', color: 'black' }}>
+              <a href="#hero" className="nav-link">Home</a>
+              <a href="#about" className="nav-link">About</a>
+              <a href="#services" className="nav-link">Work</a>
+              <a href="#skills" className="nav-link">Skills</a>
+              <a href="#contact" className="nav-link">Contact</a>
+            </div>
+          </OriginKitWaterButton>
         </nav>
       </header>
 
@@ -178,15 +197,13 @@ export default function Home() {
               <p className="hero-desc">
                 {portfolioData.hero.description}
               </p>
-              <div className="hero-cta">
-                <a href="#services" className="btn btn-primary">View My Work</a>
-                <a href="#contact" className="btn btn-secondary">Let's Talk</a>
+              <div className="hero-cta" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <OriginKitWaterButton href="#services" label="View My Work" paddingX={32} paddingY={14} rounded={9999} font={{ fontSize: 16, fontWeight: 600 }} textColor="black" />
+                <OriginKitWaterButton href="#contact" label="Let's Talk" paddingX={32} paddingY={14} rounded={9999} font={{ fontSize: 16, fontWeight: 600 }} textColor="black" />
               </div>
             </div>
 
-            <div className="hero-image-wrapper">
-              <img src="/images/profile.png" alt="Anushka Mall Portrait" className="hero-portrait" loading="lazy" />
-            </div>
+
           </div>
         </section>
 
@@ -214,20 +231,35 @@ export default function Home() {
                 <div
                   className="service-card"
                   key={index}
-                  style={{ cursor: (service.link || service.title === "Poster Design" || service.title === "Edits") ? 'pointer' : 'default' }}
-                  onClick={() => {
-                    if (service.title === "Poster Design") {
-                      openGallery();
-                    } else if (service.title === "Edits") {
-                      openInstaModal();
-                    } else if (service.link) {
-                      openLightbox(service.link);
-                    }
-                  }}
                 >
-                  <i className={`ph ph-${service.icon} service-icon`}></i>
-                  <h3 className="service-title">{service.title}</h3>
-                  <p className="service-desc">{service.description}</p>
+                  <div className="service-card-image-wrapper">
+                    <img src={service.image} alt={service.title} className="service-card-image" loading="lazy" />
+                    <div className="service-card-overlay"></div>
+                  </div>
+                  <div className="service-card-content">
+                    <h3 className="service-title">{service.title}</h3>
+                    <p className="service-desc">{service.description}</p>
+                    <div className="service-tech-stack">
+                      {service.techStack?.map((tech: string, i: number) => (
+                        <span key={i} className="tech-badge">{tech}</span>
+                      ))}
+                    </div>
+                    <div className="service-actions">
+                      <button className="btn-service-action github-btn">
+                        <i className="ph ph-github-logo"></i> GitHub
+                      </button>
+                      <button 
+                        className="btn-service-action live-demo-btn" 
+                        onClick={() => {
+                          if (service.title === "Poster Design") openGallery();
+                          else if (service.title === "Edits") openInstaModal();
+                          else if (service.link) openLightbox(service.link);
+                        }}
+                      >
+                        <i className="ph ph-arrow-up-right"></i> Live Demo
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -240,19 +272,17 @@ export default function Home() {
             <div className="gallery-modal-content">
               <button className="gallery-close" onClick={closeGallery}>&times;</button>
               <h2 className="section-title text-center" style={{ marginTop: '2rem' }}>Poster Gallery</h2>
-              <div className="posters-masonry">
-                {portfolioData.posters.map((poster: any, index) => (
-                  <div
-                    className="poster-item"
-                    key={index}
-                    onClick={() => openLightbox(poster.src)}
-                  >
-                    <img src={poster.src} alt={poster.alt} loading="lazy" />
-                    <div className="poster-overlay">
-                      <i className="ph ph-arrows-out-simple"></i>
-                    </div>
-                  </div>
-                ))}
+              <div style={{ height: '70vh', width: '100%', marginTop: '2rem' }}>
+                <Smooth3DSlideshow 
+                  slides={portfolioData.posters.map(poster => ({
+                    image: { src: poster.src, alt: poster.alt },
+                    title: poster.alt
+                  }))}
+                  cardWidth={350}
+                  cardHeight={500}
+                  radius={10}
+                  autoplay={true}
+                />
               </div>
             </div>
           </div>
@@ -260,37 +290,20 @@ export default function Home() {
 
         {/* Skills Section */}
         <section id="skills" className="skills section-padding">
-          <div className="container">
+          <div className="container" style={{ textAlign: 'center' }}>
             <h2 className="section-title">Software & Expertise</h2>
-
-            <div className="skills-category">
-              <h3 className="skills-subtitle">Graphic Design</h3>
-              <div className="skills-grid">
-                {portfolioSkills.graphicDesign.map((skill, index) => (
-                  <div className="skill-card" key={index}>
-                    <div className="skill-header">
-                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" unoptimized />
-                      <h4 className="skill-title">{skill.name}</h4>
-                    </div>
-                    <p className="skill-desc">{skill.description}</p>
+            <p style={{ maxWidth: '600px', margin: '0 auto 4rem auto', color: 'var(--text-secondary)', lineHeight: '1.6' }}>Hover over the icons below to see my primary toolkit and how I utilize each software to craft premium designs.</p>
+            
+            <div className="animated-tooltip-container">
+              {[...portfolioSkills.graphicDesign, ...portfolioSkills.videoEditing].map((skill, index) => (
+                <div className="animated-tooltip-item" key={index}>
+                  <div className="animated-tooltip-popup">
+                    <div className="tooltip-name">{skill.name}</div>
+                    <div className="tooltip-desc">{skill.description}</div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="skills-category mt-5">
-              <h3 className="skills-subtitle">Video Editing</h3>
-              <div className="skills-grid">
-                {portfolioSkills.videoEditing.map((skill, index) => (
-                  <div className="skill-card" key={index}>
-                    <div className="skill-header">
-                      <Image src={skill.icon} alt={skill.name} width={40} height={40} className="skill-icon" style={skill.name === 'DaVinci Resolve' ? { borderRadius: '8px' } : {}} unoptimized />
-                      <h4 className="skill-title">{skill.name}</h4>
-                    </div>
-                    <p className="skill-desc">{skill.description}</p>
-                  </div>
-                ))}
-              </div>
+                  <Image src={skill.icon} alt={skill.name} width={90} height={90} className="animated-tooltip-image" unoptimized />
+                </div>
+              ))}
             </div>
           </div>
         </section>

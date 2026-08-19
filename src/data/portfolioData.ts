@@ -8,30 +8,40 @@ export const portfolioData = {
     {
       "title": "Poster Design",
       "icon": "image",
-      "description": "Designing visually striking and concept-driven posters that capture attention and communicate your message instantly."
+      "description": "Designing visually striking and concept-driven posters that capture attention and communicate your message instantly.",
+      "image": "/posters/77th.jpg",
+      "techStack": ["Photoshop", "Illustrator"]
     },
     {
       "title": "Banner Design",
       "icon": "flag-banner",
       "description": "Creating impactful digital and print banners that maximize visibility and align perfectly with your campaign goals.",
-      "link": "/images/City_Flex.png"
+      "link": "/images/City_Flex.png",
+      "image": "/images/City_Flex.png",
+      "techStack": ["Photoshop", "InDesign"]
     },
     {
       "title": "Standee Design",
       "icon": "signpost",
       "description": "Developing professional and eye-catching standee graphics that draw foot traffic and elevate physical marketing.",
-      "link": "/images/Standee.png"
+      "link": "/images/Standee.png",
+      "image": "/images/Standee.png",
+      "techStack": ["Illustrator", "Photoshop"]
     },
     {
       "title": "Backdrop Design",
       "icon": "projector-screen",
       "description": "Designing premium, high-resolution backdrops for corporate events, red carpets, and stages that make a grand statement.",
-      "link": "/images/vidai_samaroh.png"
+      "link": "/images/vidai_samaroh.png",
+      "image": "/images/vidai_samaroh.png",
+      "techStack": ["Photoshop"]
     },
     {
       "title": "Edits",
       "icon": "video-camera",
-      "description": "Professional video editing, color grading, and dynamic motion graphics that bring stories to life."
+      "description": "Professional video editing, color grading, and dynamic motion graphics that bring stories to life.",
+      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop",
+      "techStack": ["Premiere Pro", "After Effects"]
     }
   ],
   "skills": {
