@@ -16,6 +16,90 @@ export default function Home() {
   const [showGallery, setShowGallery] = useState<boolean>(false);
   const [showInstaModal, setShowInstaModal] = useState<boolean>(false);
 
+  // Contact Form State
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    country: '',
+    requirement: 'Graphics',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRequirementClick = (req: string) => {
+    setFormData(prev => ({ ...prev, requirement: req }));
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatusMessage(null);
+
+    // Client-side Validation
+    if (!formData.firstName.trim()) {
+      setStatusMessage({ type: 'error', text: 'First name is required.' });
+      return;
+    }
+
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setStatusMessage({ type: 'error', text: 'Please enter a valid email address.' });
+      return;
+    }
+
+    if (!formData.message.trim()) {
+      setStatusMessage({ type: 'error', text: 'Please enter your message.' });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatusMessage({
+          type: 'success',
+          text: data.message || 'Thank you! Your message has been sent successfully.'
+        });
+        // Clear form fields on success
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          country: '',
+          requirement: 'Graphics',
+          message: ''
+        });
+      } else {
+        setStatusMessage({
+          type: 'error',
+          text: data.error || 'Failed to send message. Please try again.'
+        });
+      }
+    } catch (err: any) {
+      setStatusMessage({
+        type: 'error',
+        text: 'An unexpected error occurred. Please check your connection and try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Handle browser back button
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
@@ -182,34 +266,108 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section id="hero" className="hero" ref={heroRef}>
-          <div className="hero-bg-elements">
-            <div className="blob blob-1"></div>
-            <div className="blob blob-2"></div>
-            <div className="blob blob-3"></div>
-          </div>
-          <div className="hero-container">
-            <div className="hero-content">
-              <p className="hero-greeting">Hello, I'm Anushka Mall</p>
-              <h1 className="hero-title">
-                <span className="text-gradient">Graphic Designer</span>
-              </h1>
-              <p className="hero-desc">
-                {portfolioData.hero.description}
-              </p>
-              <div className="hero-cta" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <OriginKitWaterButton href="#services" label="View My Work" paddingX={32} paddingY={14} rounded={9999} font={{ fontSize: 16, fontWeight: 600 }} textColor="black" />
-                <OriginKitWaterButton href="#contact" label="Let's Talk" paddingX={32} paddingY={14} rounded={9999} font={{ fontSize: 16, fontWeight: 600 }} textColor="black" />
-              </div>
+        <section id="hero" className="hero-designer-canvas" ref={heroRef}>
+          {/* Subtle Grid Canvas Background */}
+          <div className="hero-grid-bg"></div>
+
+          {/* Sea-Glass Aurora Glows */}
+          <div className="hero-aurora-glow glow-1"></div>
+          <div className="hero-aurora-glow glow-2"></div>
+
+          <div className="hero-canvas-container">
+            {/* Top Micro-Metadata Badge (Design Canvas Spec) */}
+            <div className="canvas-meta-bar hero-greeting">
+              <span className="meta-tag">
+                <span className="meta-dot"></span> CANVAS 01 // ART DIRECTION
+              </span>
+              <span className="meta-tag meta-right">
+                SCALE: 100% | #67C6C8
+              </span>
             </div>
 
+            {/* Main Editorial Typography Composition */}
+            <div className="hero-typography-wrapper">
+              {/* Script/Serif Accent Name */}
+              <div className="hero-name-badge hero-greeting">
+                <span className="script-accent">Anushka Mall</span>
+                <span className="designer-role-pill">PORTFOLIO '26</span>
+              </div>
 
+              {/* Oversized Graphic Designer Title with Bounding Box & Vector Handles */}
+              <div className="hero-title-bounding-box hero-title">
+                {/* SVG Bezier Pen Tool Overlay */}
+                <svg className="pen-tool-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 20 150 C 60 40, 140 40, 180 150" stroke="#67C6C8" strokeWidth="2.5" strokeDasharray="4 4" />
+                  {/* Bezier Handles & Anchor Points */}
+                  <line x1="20" y1="150" x2="40" y2="90" stroke="#67C6C8" strokeWidth="1.5" />
+                  <circle cx="40" cy="90" r="4" fill="#0A1419" stroke="#67C6C8" strokeWidth="2" />
+                  <rect x="14" y="144" width="12" height="12" fill="#67C6C8" />
+                  <rect x="174" y="144" width="12" height="12" fill="#67C6C8" />
+                  
+                  {/* Pen Nib Icon */}
+                  <g className="pen-nib-graphic" transform="translate(155, 65) rotate(-45)">
+                    <path d="M0 0 L12 -24 L24 0 L12 36 Z" fill="#67C6C8" />
+                    <circle cx="12" cy="-4" r="2.5" fill="#0A1419" />
+                    <line x1="12" y1="-4" x2="12" y2="36" stroke="#0A1419" strokeWidth="1.5" />
+                  </g>
+                </svg>
+
+                {/* Bounding Box Corner Handles */}
+                <div className="bounding-handle handle-tl"></div>
+                <div className="bounding-handle handle-tr"></div>
+                <div className="bounding-handle handle-bl"></div>
+                <div className="bounding-handle handle-br"></div>
+                <div className="bounding-dimensions">W: 100% &times; H: AUTO</div>
+
+                <h1 className="designer-heading">
+                  <span className="heading-line line-1">GRAPHIC</span>
+                  <span className="heading-line line-2">
+                    DESIGNER<span className="accent-dot">.</span>
+                  </span>
+                </h1>
+              </div>
+
+              {/* Subtitle / Tagline */}
+              <p className="hero-desc">
+                Visual stories, bold ideas, and purposeful design.
+              </p>
+            </div>
+
+            {/* Design Tool Inspector Bar & CTAs */}
+            <div className="hero-bottom-bar">
+              {/* Secondary CTAs */}
+              <div className="hero-cta" style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+                <OriginKitWaterButton href="#services" label="View My Work" paddingX={38} paddingY={15} rounded={9999} font={{ fontSize: 17, fontWeight: 600 }} textColor="black" />
+                <OriginKitWaterButton href="#contact" label="Let's Talk" paddingX={38} paddingY={15} rounded={9999} font={{ fontSize: 17, fontWeight: 600 }} textColor="black" />
+              </div>
+
+              {/* Design Tool Micro Indicators */}
+              <div className="design-tools-strip">
+                <div className="tool-chip" title="Vector Pen Tool">
+                  <i className="ph ph-pen-nib"></i>
+                  <span>VECTOR</span>
+                </div>
+                <div className="tool-chip" title="Typography">
+                  <i className="ph ph-text-t"></i>
+                  <span>TYPE</span>
+                </div>
+                <div className="tool-chip" title="Color Palette">
+                  <i className="ph ph-palette"></i>
+                  <span>COLOR</span>
+                </div>
+                <div className="tool-chip" title="Grid Alignment">
+                  <i className="ph ph-grid-four"></i>
+                  <span>GRID</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* About Section */}
         <section id="about" className="about-premium">
           <div className="container about-container">
+            <h2 className="section-title text-center" style={{ marginBottom: '2.5rem' }}>ABOUT ME</h2>
             <h2 className="about-manifesto">
               I specialize in transforming complex ideas into visually engaging stories through
               <span className="highlight"> Poster Design</span>, <span className="highlight">Social Media Creatives</span>,
@@ -225,7 +383,7 @@ export default function Home() {
         {/* Services Section */}
         <section id="services" className="services section-padding">
           <div className="container">
-            <h2 className="section-title">What I Made</h2>
+            <h2 className="section-title text-center" style={{ marginBottom: '2.5rem' }}>WHAT I MADE</h2>
             <div className="services-grid">
               {portfolioData.services.map((service: any, index) => (
                 <div
@@ -238,16 +396,7 @@ export default function Home() {
                   </div>
                   <div className="service-card-content">
                     <h3 className="service-title">{service.title}</h3>
-                    <p className="service-desc">{service.description}</p>
-                    <div className="service-tech-stack">
-                      {service.techStack?.map((tech: string, i: number) => (
-                        <span key={i} className="tech-badge">{tech}</span>
-                      ))}
-                    </div>
                     <div className="service-actions">
-                      <button className="btn-service-action github-btn">
-                        <i className="ph ph-github-logo"></i> GitHub
-                      </button>
                       <button 
                         className="btn-service-action live-demo-btn" 
                         onClick={() => {
@@ -256,7 +405,7 @@ export default function Home() {
                           else if (service.link) openLightbox(service.link);
                         }}
                       >
-                        <i className="ph ph-arrow-up-right"></i> Live Demo
+                        VIEW
                       </button>
                     </div>
                   </div>
@@ -275,13 +424,13 @@ export default function Home() {
               <div style={{ height: '70vh', width: '100%', marginTop: '2rem' }}>
                 <Smooth3DSlideshow 
                   slides={portfolioData.posters.map(poster => ({
-                    image: { src: poster.src, alt: poster.alt },
-                    title: poster.alt
+                    image: { src: poster.src, alt: poster.alt }
                   }))}
                   cardWidth={350}
                   cardHeight={500}
-                  radius={10}
-                  autoplay={true}
+                  radius={0}
+                  autoplay={false}
+                  showTitle={false}
                 />
               </div>
             </div>
@@ -291,8 +440,7 @@ export default function Home() {
         {/* Skills Section */}
         <section id="skills" className="skills section-padding">
           <div className="container" style={{ textAlign: 'center' }}>
-            <h2 className="section-title">Software & Expertise</h2>
-            <p style={{ maxWidth: '600px', margin: '0 auto 4rem auto', color: 'var(--text-secondary)', lineHeight: '1.6' }}>Hover over the icons below to see my primary toolkit and how I utilize each software to craft premium designs.</p>
+            <h2 className="section-title" style={{ marginBottom: '3rem' }}>Software & Expertise</h2>
             
             <div className="animated-tooltip-container">
               {[...portfolioSkills.graphicDesign, ...portfolioSkills.videoEditing].map((skill, index) => (
@@ -312,61 +460,118 @@ export default function Home() {
         {/* Contact Section */}
         <section id="contact" className="contact section-padding">
           <div className="container">
+            <h2 className="section-title text-center" style={{ marginBottom: '2.5rem' }}>CONTACT</h2>
             <div className="contact-premium-wrapper centered">
               {/* Center Aligned Form */}
               <div className="contact-form-container">
-                <h2 className="contact-title text-center">Let's Create Something Premium</h2>
+                <h3 className="contact-title text-center" style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>Let's Create Something Premium</h3>
                 <p className="text-center" style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Fill out the form below and I'll get back to you shortly.</p>
 
-                <form className="premium-form">
+                <form className="premium-form" onSubmit={handleContactSubmit}>
+                  {statusMessage && (
+                    <div className={`form-alert ${statusMessage.type}`}>
+                      {statusMessage.text}
+                    </div>
+                  )}
+
                   <div className="form-row">
                     <div className="form-group">
                       <label>First name <span className="required">*</span></label>
-                      <input type="text" placeholder="First name" required />
+                      <input 
+                        type="text" 
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        placeholder="First name" 
+                        required 
+                      />
                     </div>
                     <div className="form-group">
                       <label>Last name</label>
-                      <input type="text" placeholder="Last name" />
+                      <input 
+                        type="text" 
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        placeholder="Last name" 
+                      />
                     </div>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
                       <label>Email <span className="required">*</span></label>
-                      <input type="email" placeholder="Email" required />
+                      <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Email" 
+                        required 
+                      />
                     </div>
                     <div className="form-group">
                       <label>Phone</label>
-                      <input type="tel" placeholder="Phone" />
+                      <input 
+                        type="tel" 
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Phone" 
+                      />
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label>Country <span className="required">*</span></label>
-                    <select required defaultValue="">
-                      <option value="" disabled>Your Country</option>
-                      <option value="us">United States</option>
-                      <option value="uk">United Kingdom</option>
-                      <option value="in">India</option>
-                      <option value="other">Other</option>
+                    <label>Country</label>
+                    <select 
+                      name="country"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select Country</option>
+                      <option value="United States">United States</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="India">India</option>
+                      <option value="Other">Other</option>
                     </select>
                   </div>
 
                   <div className="form-group">
                     <label>Your Requirement</label>
                     <div className="requirement-pills justify-center">
-                      <button type="button" className="req-pill">Website</button>
-                      <button type="button" className="req-pill">Graphics</button>
-                      <button type="button" className="req-pill">Video</button>
+                      {['Website', 'Graphics', 'Video'].map((req) => (
+                        <button 
+                          key={req}
+                          type="button" 
+                          className={`req-pill ${formData.requirement === req ? 'active' : ''}`}
+                          onClick={() => handleRequirementClick(req)}
+                        >
+                          {req}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label>How can I help?</label>
-                    <textarea placeholder="Feel free to outline your ideas or needs..." rows={4}></textarea>
+                    <label>How can I help? <span className="required">*</span></label>
+                    <textarea 
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Feel free to outline your ideas or needs..." 
+                      rows={4}
+                      required
+                    ></textarea>
                   </div>
 
-                  <button type="button" className="btn-submit-premium w-100 mt-4">Submit Application</button>
+                  <button 
+                    type="submit" 
+                    className="btn-submit-premium w-100 mt-4"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Sending Message...' : 'Send Message'}
+                  </button>
                 </form>
               </div>
             </div>
@@ -380,6 +585,8 @@ export default function Home() {
           </div>
         </footer>
       </main>
+
+
 
       {/* Insta Pages Modal */}
       {showInstaModal && (

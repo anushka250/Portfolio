@@ -40,7 +40,7 @@ export const portfolioData = {
       "title": "Edits",
       "icon": "video-camera",
       "description": "Professional video editing, color grading, and dynamic motion graphics that bring stories to life.",
-      "image": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop",
+      "image": "/images/edits_cover.png",
       "techStack": ["Premiere Pro", "After Effects"]
     }
   ],

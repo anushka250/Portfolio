@@ -117,7 +117,7 @@ export default function Smooth3DSlideshow(props: Smooth3DSlideshowProps) {
         transition,
         autoplay = false,
         autoplayDirection = "rightToLeft",
-        showTitle = true,
+        showTitle = false,
         titleFont,
         titleColor = "#ffffff",
         titlePosition,
@@ -272,8 +272,8 @@ export default function Smooth3DSlideshow(props: Smooth3DSlideshowProps) {
                         top: "50%",
                         width: cardWidth,
                         height: cardHeight,
-                        borderRadius: effectiveRadius,
-                        overflow: "hidden",
+                        borderRadius: 0,
+                        overflow: "visible",
                         transformStyle: "preserve-3d",
                         transformOrigin: "center center",
                         transform: `translate(-50%, -50%) translateX(${tx}px) translateZ(${tz}px) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${sc})`,
@@ -282,7 +282,7 @@ export default function Smooth3DSlideshow(props: Smooth3DSlideshowProps) {
                         cursor: autoplay || isActive ? "default" : "pointer",
                         pointerEvents:
                             visible && !isStatic && !autoplay ? "auto" : "none",
-                        backgroundColor: "#1a1a1a",
+                        backgroundColor: "transparent",
                     }
 
                     return (
@@ -305,9 +305,12 @@ export default function Smooth3DSlideshow(props: Smooth3DSlideshowProps) {
                                         inset: 0,
                                         width: "100%",
                                         height: "100%",
-                                        objectFit: "cover",
+                                        objectFit: "contain",
                                         display: "block",
                                         userSelect: "none",
+                                        borderRadius: 0,
+                                        filter: isActive ? "drop-shadow(0 15px 35px rgba(0,0,0,0.8))" : `brightness(${Math.max(0.3, 1 - dim)}) drop-shadow(0 10px 20px rgba(0,0,0,0.6))`,
+                                        transition: `filter ${dur}s ${ease}`,
                                     }}
                                 />
                             ) : null}
@@ -359,18 +362,6 @@ export default function Smooth3DSlideshow(props: Smooth3DSlideshowProps) {
                                     </div>
                                 </>
                             )}
-
-                            {/* Dim overlay (darkens inactive cards entirely) */}
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    background: "#000000",
-                                    opacity: isActive ? 0 : dim,
-                                    transition: `opacity ${dur}s ${ease}`,
-                                    pointerEvents: "none",
-                                }}
-                            />
                         </div>
                     )
                 })}
@@ -414,7 +405,7 @@ const COMPONENT_DEFAULTS = {
     ],
     cardWidth: 400,
     cardHeight: 400,
-    radius: 3,
+    radius: 0,
     tilt: 12,
     sideTilt: 8,
     gap: 8,
@@ -427,7 +418,7 @@ const COMPONENT_DEFAULTS = {
         delay: 2.5,
         ease: [0.22, 1, 0.36, 1],
     },
-    showTitle: true,
+    showTitle: false,
     titleFont: {
         fontFamily: "Inter",
         variant: "Bold",
