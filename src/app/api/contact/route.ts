@@ -25,22 +25,14 @@ export async function POST(request: Request) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL;
+    const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL || 'msanya086@gmail.com';
 
-    // Check required environment variables
+    // Check required API key
     if (!apiKey || apiKey.trim() === '' || apiKey.includes('placeholder')) {
       console.error('[Resend Error] RESEND_API_KEY environment variable is missing.');
       return NextResponse.json({
         success: false,
-        error: 'Email service is not configured yet. (RESEND_API_KEY missing)'
-      }, { status: 500 });
-    }
-
-    if (!recipientEmail || recipientEmail.trim() === '') {
-      console.error('[Resend Error] CONTACT_RECIPIENT_EMAIL environment variable is missing.');
-      return NextResponse.json({
-        success: false,
-        error: 'Recipient email is not configured yet. (CONTACT_RECIPIENT_EMAIL missing)'
+        error: 'Unable to send your message. Please try again.'
       }, { status: 500 });
     }
 
@@ -73,7 +65,7 @@ export async function POST(request: Request) {
       console.error('[Resend API Error]:', error);
       return NextResponse.json({
         success: false,
-        error: error.message || 'Failed to send email via Resend API.'
+        error: error.message || 'Unable to send your message. Please try again.'
       }, { status: 500 });
     }
 
@@ -87,7 +79,7 @@ export async function POST(request: Request) {
     console.error('[Contact API Internal Error]:', err);
     return NextResponse.json({
       success: false,
-      error: err.message || 'Internal server error while sending email.'
+      error: 'Unable to send your message. Please try again.'
     }, { status: 500 });
   }
 }
